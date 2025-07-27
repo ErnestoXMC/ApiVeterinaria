@@ -38,7 +38,7 @@ const VeterinarioSchema = mongoose.Schema({
     }
 });
 
-//Es asincrona porque bcrypt se toma su tiempo
+//* Es asincrona porque bcrypt se toma su tiempo
 VeterinarioSchema.pre("save", async function (next) {
 
     if (!this.isModified("password")) {
@@ -48,6 +48,11 @@ VeterinarioSchema.pre("save", async function (next) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 });
+
+//* Comparar Passwords
+VeterinarioSchema.methods.comprobarPassword = async function(passwordFormulario){
+    return await bcrypt.compare(passwordFormulario, this.password);
+}
 
 //Creamos el modelo Veterinario a partir del schema
 const Veterinario = mongoose.model('Veterinario', VeterinarioSchema);

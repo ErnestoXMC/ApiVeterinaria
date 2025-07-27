@@ -1,12 +1,16 @@
 import express from 'express';
-import { registrar, perfil, confirmar } from '../controllers/veterinarioController.js';
+import { registrar, perfil, confirmar, autenticar } from '../controllers/veterinarioController.js';
+import checkAuth from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-//Rutas
+//! Rutas Publicas
 router.post('/', registrar);
-router.get('/perfil', perfil);
 router.get('/confirmar/:token', confirmar);
+router.post('/login', autenticar);
+
+//! Rutas Protegidas
+router.get('/perfil', checkAuth, perfil);
 
 
 export default router;

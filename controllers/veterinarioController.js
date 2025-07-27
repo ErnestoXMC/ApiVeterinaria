@@ -1,3 +1,4 @@
+import generarJWT from "../helpers/generarJWT.js";
 import Veterinario from "../models/Veterinario.js";
 
 const registrar = async (req, res) => {
@@ -23,10 +24,6 @@ const registrar = async (req, res) => {
     }
 }
 
-const perfil = (req, res) => {
-    res.json({ msg: "Desde API/VETERINARIOS/perfil" });
-}
-
 const confirmar = async (req, res) => {
 
     const { token } = req.params;
@@ -42,11 +39,49 @@ const confirmar = async (req, res) => {
         usuarioConfirmado.token = null;
         usuarioConfirmado.confirmado = true;
         await usuarioConfirmado.save();
-        
+
         res.json({ msg: "Usuario Confirmado Correctamente" });
     } catch (error) {
         res.status(400).json({ msg: "Error al confirmar usuario" });
     }
 }
 
-export { registrar, perfil, confirmar };
+const autenticar = async (req, res) => {
+    const { email, password } = req.body;
+
+    //? Verificar si existe el usuario
+    const usuario = await Veterinario.findOne({ email });
+
+    if (!usuario) {
+        const error = new Error("El Usuario No Existe");
+        res.status(401).json({ msg: error.message });
+    }
+
+    //? Verificar si el usuario está confirmado(Verificado)
+    const { confirmado } = usuario;
+
+    if (!confirmado) {
+        const error = new Error("Tu cuenta no ha sido confirmada");
+        res.status(403).json({ msg: error.message });
+    }
+
+    //? Verificar Contraseñas
+    const passwordVerificado = await usuario.comprobarPassword(password);
+    if (!passwordVerificado) {
+        const error = new Error("Password incorrecto");
+        res.status(406).json({ msg: error.message });
+    }
+
+    //? Generar Token unico
+    res.json({
+        token: generarJWT(usuario.id)
+    });
+
+}
+
+const perfil = (req, res) => {
+    console.log(req.veterinario);
+    res.json({ msg: `Mostrando Perfil Veterinario`, veterinario: req.veterinario });
+}
+
+export { registrar, perfil, confirmar, autenticar };
