@@ -2,6 +2,7 @@ import express from "express";//Dependencias no requerien la extension .js
 import dotenv from "dotenv";
 import conectarDB from "./config/db.js";//Archivos creados por nosotros necesitan la extension .js
 import veterinarioRoutes from "./routes/veterinarioRoutes.js";
+import pacienteRoutes from "./routes/pacienteRoutes.js";
 
 const app = express();
 //Permite leer correctamente los datos JSON que nos mandan en request en el controlador
@@ -14,6 +15,7 @@ conectarDB();
 
 //Ruta
 app.use('/api/veterinarios', veterinarioRoutes);
+app.use('/api/pacientes', pacienteRoutes);
 
 //Puerto
 const PORT = process.env.PORT || 4000;
