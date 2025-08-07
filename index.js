@@ -19,11 +19,12 @@ conectarDB();
 const dominiosPermitidos = ["http://localhost:5173"];
 
 const corsOptions = {
-    origin: function(origin, callback){
-        if(dominiosPermitidos.indexOf(origin) !== -1){
+    origin: function (origin, callback) {
+        // Permitir si no hay origin (Postman, curl, etc.) o si está en la lista
+        if (!origin || dominiosPermitidos.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error("No permitido por CORS Policity"));
+            callback(new Error("No permitido por CORS Policy"));
         }
     }
 }

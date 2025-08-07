@@ -1,11 +1,12 @@
+import emailRegistro from "../helpers/emailRegistro.js";
 import generarId from "../helpers/generarId.js";
 import generarJWT from "../helpers/generarJWT.js";
 import Veterinario from "../models/Veterinario.js";
 
 const registrar = async (req, res) => {
-    const { email } = req.body;
+    const { email, nombre } = req.body;
 
-    //Verificamos que el usuario no se repita
+    //?Verificamos que el usuario no se repita
     const existeUsuario = await Veterinario.findOne({ email: email });// Primero el campo de la coleccion y luego el campo del request
 
     if (existeUsuario) {
@@ -13,10 +14,17 @@ const registrar = async (req, res) => {
         return res.status(400).json({ msg: error.message });
     }
 
-    //Insertamos el veterinario
+    //?Insertamos el veterinario
     try {
         const veterinario = new Veterinario(req.body);
         const veterinarioGuardado = await veterinario.save();
+
+        //?Envio de email
+        emailRegistro({
+            email,
+            nombre,
+            token: veterinarioGuardado.token
+        })
 
         res.json(veterinarioGuardado);
 
