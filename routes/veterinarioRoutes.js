@@ -9,7 +9,9 @@ router.post('/', registrar);
 router.get('/confirmar/:token', confirmar);
 router.post('/login', autenticar);
 router.post('/olvide-password', olvidarPassword);
-router.route('/olvide-password/:token').get(comprobarToken).post(nuevoPassword);
+router.route('/olvide-password/:token')
+        .get(comprobarToken)
+        .post(nuevoPassword);
 
 //! Rutas Protegidas
 router.get('/perfil', checkAuth, perfil);

@@ -1,3 +1,4 @@
+import emailOlvidePassword from "../helpers/emailOlvidePassword.js";
 import emailRegistro from "../helpers/emailRegistro.js";
 import generarId from "../helpers/generarId.js";
 import generarJWT from "../helpers/generarJWT.js";
@@ -110,6 +111,13 @@ const olvidarPassword = async (req, res) => {
         existeVeterinario.token = generarId();
 
         await existeVeterinario.save();
+
+        //? Enviamos Email
+        emailOlvidePassword({
+            email,
+            nombre: existeVeterinario.nombre,
+            token: existeVeterinario.token
+        })
 
         return res.json({ msg: "Hemos enviado un correo a tu email con las instrucciones" });
 
