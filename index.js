@@ -16,7 +16,7 @@ dotenv.config();
 conectarDB();
 
 //Configuracion de cors
-const dominiosPermitidos = ["http://localhost:5173"];
+const dominiosPermitidos = ["https://patients-veterinarian.netlify.app"];
 
 const corsOptions = {
     origin: function (origin, callback) {
