@@ -102,7 +102,7 @@ const eliminarPaciente = async (req, res) => {
         }
 
         await paciente.deleteOne();
-        return res.json({msg: "Paciente Eliminado"});
+        return res.json({msg: "Paciente Eliminado correctamente"});
     } catch (error) {
         return res.status(400).json({msg: "Error al eliminar un paciente"});
     }
